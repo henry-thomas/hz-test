@@ -7,6 +7,7 @@ package com.mycompany.hz.test.app.hzUtils;
 import com.hazelcast.config.Config;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.core.LifecycleService;
 import com.hazelcast.map.IMap;
 import java.util.Map;
 
@@ -17,7 +18,7 @@ import java.util.Map;
 public class HzController {
 
     private String appId;
-    private final IMap<String, String> map = Hazelcast.newHazelcastInstance(null).getMap("hz-test");
+    private final IMap<String, String> map;
     private final Config hzConfig = new Config();
     private HazelcastInstance hz;
     private static HzController INSTANCE = null;
@@ -25,6 +26,10 @@ public class HzController {
     public HzController() {
         hzConfig.setClusterName("hz-test-cluster");
         hz = Hazelcast.newHazelcastInstance(hzConfig);
+        map = hz.getMap("hz-test");
+        LifecycleService lifeCycle = hz.getLifecycleService();
+        lifeCycle.addLifecycleListener(new HzLifeCycleListener());
+        hz.addDistributedObjectListener(new HzDistrObjectListener());
     }
 
     public static HzController getInstance() {
@@ -67,9 +72,9 @@ public class HzController {
         }
     }
 
-    public void send(String id) {
-        if (appId != null) {
-            map.put(id, appId);
+    public static void send(String id) {
+        if (INSTANCE.appId != null) {
+            INSTANCE.map.put(id, INSTANCE.appId);
         }
     }
 

@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  */
 public class ServerConnection implements Runnable {
 
-    private String serverId;
+    private String appId;
     private int port;
     private String host;
     private Socket client;
@@ -41,11 +41,11 @@ public class ServerConnection implements Runnable {
     }
 
     public String getServerId() {
-        return serverId;
+        return appId;
     }
 
     public void setServerId(String serverId) {
-        this.serverId = serverId;
+        this.appId = serverId;
     }
 
     public int getPort() {
@@ -82,7 +82,7 @@ public class ServerConnection implements Runnable {
         HzController hz = HzController.getInstance();
         System.out.println(msg.getMessage());
 
-        hz.send(msg.getMessage());
+        HzController.send(msg.getMessage());
 
         hz.showConnected();
 
@@ -108,12 +108,11 @@ public class ServerConnection implements Runnable {
 
                 Message processMessage = processMessage(inline);
                 sendData(processMessage);
-                client.close();
+                // client.close();
 
             }
 
             client.close();
-            Logger.getLogger(ServerConnection.class.getName()).log(Level.SEVERE, "Closing connection: {0}", client.getPort());
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(ServerConnection.class.getName()).log(Level.SEVERE, "Closing connection: {0}", ex.getClass());
         }

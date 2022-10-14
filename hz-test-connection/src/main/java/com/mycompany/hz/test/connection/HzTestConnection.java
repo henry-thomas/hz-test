@@ -19,14 +19,15 @@ import java.util.logging.Logger;
  */
 public class HzTestConnection {
 
-    private static Socket sock;
-
     public static void main(String[] args) {
         String appId = args.length > 0 ? args[0] : "unknown app";
-        boolean connected = false;
-        while (!connected) {
-            try {
-                sock = new Socket("localhost", 4004);
+        Integer port = args.length > 0 ? Integer.valueOf(args[1]) : 4004;
+
+        boolean connected = true;
+
+        while (connected) {
+            try ( Socket sock = new Socket("localhost", port)) {
+
                 ObjectInputStream ois = new ObjectInputStream(sock.getInputStream());
                 ObjectOutputStream oos = new ObjectOutputStream(sock.getOutputStream());
 
@@ -37,10 +38,13 @@ public class HzTestConnection {
 
                 Message readObject = (Message) ois.readObject();
                 System.out.println(readObject.getMessage());
+                Thread.sleep(60000);
                 connected = true;
-                sock.close();
             } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(HzTestConnection.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
         }
     }

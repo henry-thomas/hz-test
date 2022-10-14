@@ -5,13 +5,11 @@
 package com.mycompany.hz.test.app;
 
 import com.mycompany.hz.test.app.hzUtils.HzController;
-import com.hazelcast.core.Hazelcast;
-import com.hazelcast.core.LifecycleService;
-import com.mycompany.hz.test.app.hzUtils.HzLifeCycleListener;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 /**
@@ -21,23 +19,27 @@ import java.util.logging.Logger;
 public class HzTestApp {
 
     public static void main(String[] args) {
+        Logger logger = LogManager.getLogManager().getLogger("");
+        logger.setLevel(Level.INFO);
 
+//        HazelcastInstance hz = Hazelcast.newHazelcastInstance(null);
         try {
-            LifecycleService lifeCycle = Hazelcast.newHazelcastInstance(null).getLifecycleService();
-            lifeCycle.addLifecycleListener(new HzLifeCycleListener());
 
             
-            ServerSocket server = new ServerSocket(4004);
 
-            String appId = args.length > 0 ? args[0] : "no-name";
+            String appId = args.length > 0 ? args[0] : "Server-1";
+            Integer port = args.length > 1 ? Integer.valueOf(args[1]) : 4004;
 
-            HzController.getInstance(appId);
+            try ( ServerSocket server = new ServerSocket(port)) {
 
-            while (true) {
-                Socket client = server.accept();
-                Thread sthread = new Thread(new ServerConnection(client));
-                sthread.setName(client.getInetAddress().getHostAddress() + "-" + client.getPort());
-                sthread.start();
+                HzController.getInstance(appId);
+
+                while (true) {
+                    Socket client = server.accept();
+                    Thread sthread = new Thread(new ServerConnection(client));
+                    sthread.setName(client.getInetAddress().getHostAddress() + "-" + client.getPort());
+                    sthread.start();
+                }
             }
 
         } catch (IOException ex) {

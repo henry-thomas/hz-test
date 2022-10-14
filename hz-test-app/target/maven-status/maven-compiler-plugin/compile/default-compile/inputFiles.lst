@@ -1,3 +1,6 @@
-C:\Users\henry\Documents\NetBeansProjects\hz-test-app\src\main\java\com\mycompany\hz\test\app\HzTestApp.java
-C:\Users\henry\Documents\NetBeansProjects\hz-test-app\src\main\java\com\mycompany\hz\test\app\HzController.java
-C:\Users\henry\Documents\NetBeansProjects\hz-test-app\src\main\java\com\mycompany\hz\test\app\ConnectionCallback.java
+C:\Users\henry\Documents\NetBeansProjects\hz-test\hz-test-app\src\main\java\com\mycompany\hz\test\app\hzUtils\HzLoadBalancer.java
+C:\Users\henry\Documents\NetBeansProjects\hz-test\hz-test-app\src\main\java\com\mycompany\hz\test\app\hzUtils\HzController.java
+C:\Users\henry\Documents\NetBeansProjects\hz-test\hz-test-app\src\main\java\com\mycompany\hz\test\app\ServerConnection.java
+C:\Users\henry\Documents\NetBeansProjects\hz-test\hz-test-app\src\main\java\com\mycompany\hz\test\app\hzUtils\ConnectionCallback.java
+C:\Users\henry\Documents\NetBeansProjects\hz-test\hz-test-app\src\main\java\com\mycompany\hz\test\app\hzUtils\HzLifeCycleListener.java
+C:\Users\henry\Documents\NetBeansProjects\hz-test\hz-test-app\src\main\java\com\mycompany\hz\test\app\HzTestApp.java
