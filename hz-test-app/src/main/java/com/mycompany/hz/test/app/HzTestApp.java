@@ -32,7 +32,7 @@ public class HzTestApp {
 
             try ( ServerSocket server = new ServerSocket(port)) {
 
-                HzController.getInstance(appId);
+                HzController.init(appId);
 
                 while (true) {
                     Socket client = server.accept();

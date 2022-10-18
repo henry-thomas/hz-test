@@ -5,12 +5,12 @@
 package com.mycompany.hz.test.client;
 
 import com.hazelcast.client.HazelcastClient;
-import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.LifecycleService;
 import com.hazelcast.map.IMap;
-import com.hazelcast.map.LocalMapStats;
+import com.mycompany.hz.test.lib.Message;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -18,18 +18,29 @@ import java.util.Map;
  */
 public class HzTestClient {
 
-    private static IMap<String, String> map;
+    private static IMap<String, Message> map;
 
     public static void main(String[] args) {
+
         HazelcastInstance hz = HazelcastClient.newHazelcastClient(HzConfig.defaultConfig());
         hz.getCluster().addMembershipListener(new HzMembershipListener());
+
         map = hz.getMap("hz-test");
+        map.addEntryListener(new HzMapListener(), true);
 
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            String id = entry.getKey();
-            String appId = entry.getValue();
-
-            System.out.println("Hello " + id + " on " + appId);
+        while (true) {
+            try {
+                for (Map.Entry<String, Message> entry : map.entrySet()) {
+                    String id = entry.getKey();
+                    String appId = entry.getValue().getMessage();
+                    
+                    System.out.println("Hello " + id + " on " + appId);
+                }
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(HzTestClient.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+
     }
 }

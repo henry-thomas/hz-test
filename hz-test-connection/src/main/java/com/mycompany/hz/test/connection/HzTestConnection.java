@@ -20,19 +20,22 @@ import java.util.logging.Logger;
 public class HzTestConnection {
 
     public static void main(String[] args) {
-        String appId = args.length > 0 ? args[0] : "unknown app";
+        String connId = args.length > 0 ? args[0] : "unknown app";
         Integer port = args.length > 0 ? Integer.valueOf(args[1]) : 4004;
 
-        boolean connected = true;
-
-        while (connected) {
-            try ( Socket sock = new Socket("localhost", port)) {
+        boolean connected = false;
+        Socket sock = null;
+        while (true) {
+            try {
+                if (sock == null || !sock.isConnected()) {
+                    sock = new Socket("localhost", port);
+                }
 
                 ObjectInputStream ois = new ObjectInputStream(sock.getInputStream());
                 ObjectOutputStream oos = new ObjectOutputStream(sock.getOutputStream());
 
                 Message message = new Message();
-                message.setMessage(appId);
+                message.setMessage(connId);
 
                 oos.writeObject(message);
 

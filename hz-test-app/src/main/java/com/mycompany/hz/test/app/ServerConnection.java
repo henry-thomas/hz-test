@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  */
 public class ServerConnection implements Runnable {
 
-    private String appId;
+    private String connId;
     private int port;
     private String host;
     private Socket client;
@@ -40,12 +40,12 @@ public class ServerConnection implements Runnable {
         }
     }
 
-    public String getServerId() {
-        return appId;
+    public String connId() {
+        return connId;
     }
 
     public void setServerId(String serverId) {
-        this.appId = serverId;
+        this.connId = serverId;
     }
 
     public int getPort() {
@@ -79,14 +79,21 @@ public class ServerConnection implements Runnable {
 
     private Message processMessage(Message msg) throws IOException {
 
-        HzController hz = HzController.getInstance();
-        System.out.println(msg.getMessage());
+        HzController hz;
+        try {
+            hz = HzController.getInstance();
+            System.out.println(msg.getMessage());
 
-        HzController.send(msg.getMessage());
+            HzController.put(msg);
+            this.connId = msg.getMessage();
 
-        hz.showConnected();
+            hz.showConnected();
 
-        msg.setMessage("Connected to " + HzController.getInstance().getAppId());
+            msg.setMessage("Connected to " + HzController.getInstance().getAppId());
+        } catch (Exception ex) {
+            Logger.getLogger(ServerConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         return msg;
     }
 
@@ -113,9 +120,12 @@ public class ServerConnection implements Runnable {
             }
 
             client.close();
+            parallelConnectionCount--;
+            HzController.remove(connId);
         } catch (IOException | ClassNotFoundException ex) {
+            HzController.remove(connId);
+            parallelConnectionCount--;
             Logger.getLogger(ServerConnection.class.getName()).log(Level.SEVERE, "Closing connection: {0}", ex.getClass());
         }
-        parallelConnectionCount--;
     }
 }

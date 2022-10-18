@@ -1,7 +1,6 @@
 package com.mycompany.hz.test.client;
 
 import com.hazelcast.client.config.ClientConfig;
-import com.hazelcast.config.Config;
 
 public class HzConfig {
 

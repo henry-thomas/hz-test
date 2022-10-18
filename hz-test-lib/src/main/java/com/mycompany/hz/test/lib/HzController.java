@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.mycompany.hz.test.app.hzUtils;
+package com.mycompany.hz.test.lib;
 
 import com.hazelcast.config.Config;
 import com.hazelcast.config.JoinConfig;
